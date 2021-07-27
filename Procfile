@@ -1,1 +1,1 @@
-web: guicorn myblogging.com.wsgi --log-file
+web: guicorn Blog.wsgi --log-file
