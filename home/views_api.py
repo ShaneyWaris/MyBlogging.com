@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from django.contrib.auth.models import User
 from .models import Profile
 from .helpers import *
+from django.contrib import messages
 from django.contrib.auth import authenticate , login
 
 class LoginView(APIView):
@@ -62,7 +63,7 @@ class RegisterView(APIView):
     def post(self , request):
         response = {}
         response['status'] = 500
-        response['message'] = 'Something went wrong'
+        response['message'] = 'Something went wrong!'
         try:
             data = request.data
             
@@ -78,22 +79,29 @@ class RegisterView(APIView):
             check_user = User.objects.filter(username = data.get('username')).first()
             
             if check_user:
-                response['message'] = 'username  already taken'
+                response['message'] = 'Username  Already Taken!'
                 raise Exception('username  already taken')
-            
+
+
+
             user_obj = User.objects.create(email = data.get('username') , username = data.get('username'))
             user_obj.set_password(data.get('password'))
             user_obj.save()
             token = generate_random_string(20)
             Profile.objects.create(user = user_obj , token = token)
-            #send_mail_to_user(token , data.get('username'))
-            response['message'] = 'User created '
-            response['status'] = 200
+            # send_mail_to_user(token , data.get('username'))
+            response['message'] = 'User created. Please Sign In now!'
+            response['status'] = 500   # change it to 200
+
+
+            # response['message'] = 'Your Profile created. Please Sign In now!'
+            # raise Exception('Your Profile is created. Please Sign In now!')
+            # messages.success(request, 'Your Profile created. Please Sign In now!')
             
                 
             
         except Exception as e :
-            print(e)
+            print("Exception = ", e)
             
         return Response(response)
             

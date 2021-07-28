@@ -6,7 +6,7 @@ from .helpers import *
 
 class Profile(models.Model):
     user = models.ForeignKey(User , on_delete=models.CASCADE)
-    # is_verified = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)
     token = models.CharField(max_length=100)
     
     
